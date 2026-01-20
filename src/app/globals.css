@@ -1,6 +1,11 @@
+@import url('https://fonts.cdnfonts.com/css/futura-lt-bt');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.font-futura {
+  font-family: 'Futura Lt BT', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
 
 /* Nexa Font Import */
 @font-face {
