@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields
     const { title, description } = data;
-    const missingFields = [];
+    const missingFields: string[] = [];
     if (!title) missingFields.push('title');
     if (!description) missingFields.push('description');
     if (missingFields.length > 0) {
