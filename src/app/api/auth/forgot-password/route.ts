@@ -4,6 +4,8 @@ import prisma from '@/lib/db/prisma';
 import { generatePasswordResetToken } from '@/lib/auth/tokens';
 import { forgotPasswordSchema } from '@/lib/validations/auth';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

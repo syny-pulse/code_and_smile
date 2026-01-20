@@ -4,6 +4,8 @@ import { z } from 'zod';
 import prisma from '@/lib/db/prisma';
 import { signUpSchema } from '@/lib/validations/auth';
 
+export const dynamic = 'force-dynamic';
+
 const BCRYPT_ROUNDS = 10;
 
 export async function POST(request: NextRequest) {

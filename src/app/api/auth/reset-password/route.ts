@@ -5,6 +5,8 @@ import prisma from '@/lib/db/prisma';
 import { verifyPasswordResetToken, deletePasswordResetToken } from '@/lib/auth/tokens';
 import { resetPasswordSchema } from '@/lib/validations/auth';
 
+export const dynamic = 'force-dynamic';
+
 const BCRYPT_ROUNDS = 10;
 
 const requestSchema = z.object({
