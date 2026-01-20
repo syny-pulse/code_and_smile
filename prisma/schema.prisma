@@ -8,7 +8,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// =====================================================
+// ENUMS
+// =====================================================
+
 enum UserRole {
+  ADMIN
   TUTOR
   LEARNER
   APPLICANT
@@ -33,57 +38,160 @@ enum CourseOfInterest {
   WEB_DESIGN
 }
 
+// =====================================================
+// AUTHENTICATION MODELS (NextAuth.js)
+// =====================================================
+
 model User {
-  id             String       @id @default(uuid())
-  email          String       @unique
-  username       String       @unique
-  firstName      String
-  lastName       String
-  password       String
-  role           UserRole     @default(LEARNER)
-  avatar         String?
-  isEmailVerified Boolean     @default(false)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  
-  // Relations
-  courses        Course[]     // Courses created as tutor
-  enrollments    Enrollment[]
-  progress       Progress[]
-  submissions    Submission[]
+  id              String    @id @default(uuid())
+  email           String    @unique
+  username        String    @unique
+  firstName       String
+  lastName        String
+  password        String
+  role            UserRole  @default(LEARNER)
+  avatar          String?
+  isEmailVerified Boolean   @default(false)
+  emailVerifiedAt DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // NextAuth Relations
+  accounts    Account[]
+  sessions    Session[]
+
+  // Application Relations
+  courses     Course[]     // Courses created as tutor
+  enrollments Enrollment[]
+  progress    Progress[]
+  submissions Submission[]
+
+  @@index([role])
+  @@index([createdAt])
+}
+
+// OAuth Account - Links external providers (Google, GitHub) to users
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+// Session - Database sessions (optional with JWT strategy, but useful for management)
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expires])
+}
+
+// Email Verification Token
+model EmailVerificationToken {
+  id        String   @id @default(uuid())
+  email     String
+  token     String   @unique
+  expires   DateTime
+  createdAt DateTime @default(now())
+
+  @@unique([email, token])
+  @@index([expires])
+}
+
+// Password Reset Token
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  email     String
+  token     String   @unique
+  expires   DateTime
+  createdAt DateTime @default(now())
+
+  @@unique([email, token])
+  @@index([expires])
+}
+
+// =====================================================
+// APPLICATION MODELS
+// =====================================================
+
+model Applicant {
+  id               String           @id @default(uuid())
+  firstName        String
+  lastName         String
+  email            String           @unique
+  phone            String
+  courseOfInterest CourseOfInterest
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@index([courseOfInterest])
+  @@index([createdAt])
 }
 
 model Course {
-  id          String   @id @default(uuid())
+  id          String      @id @default(uuid())
   tutorId     String
-  tutor       User     @relation(fields: [tutorId], references: [id])
+  tutor       User        @relation(fields: [tutorId], references: [id])
   title       String
-  description String   @db.Text
+  description String      @db.Text
   level       CourseLevel @default(BEGINNER)
+  duration    Int?
+  thumbnail   String?
+  isPublished Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  lessons     Lesson[]
+  assignments Assignment[]
+  enrollments Enrollment[]
+
+  @@index([tutorId])
+  @@index([level])
+  @@index([isPublished])
+  @@index([createdAt])
+}
+
+model Lesson {
+  id          String   @id @default(uuid())
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title       String
+  description String?  @db.Text
+  content     String?  @db.Text
+  videoUrl    String?
+  order       Int      @default(0)
   duration    Int?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   // Relations
-  lessons      Lesson[]
-  assignments  Assignment[]
-  enrollments  Enrollment[]
-}
+  progress Progress[]
 
-model Lesson {
-  id        String      @id @default(uuid())
-  courseId  String
-  course    Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  title     String
-  content   String?     @db.Text
-  videoUrl  String?
-  order     Int
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  description String? @db.Text
-  
-  // Relations
-  progress   Progress[]
+  @@index([courseId])
+  @@index([order])
 }
 
 model Assignment {
@@ -93,14 +201,18 @@ model Assignment {
   title       String
   description String         @db.Text
   type        AssignmentType
-  maxScore    Int
-  timeLimit   Int?           // in minutes
+  maxScore    Int            @default(100)
+  timeLimit   Int?
   dueDate     DateTime?
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
-  
+
   // Relations
   submissions Submission[]
+
+  @@index([courseId])
+  @@index([type])
+  @@index([dueDate])
 }
 
 model Enrollment {
@@ -111,9 +223,12 @@ model Enrollment {
   course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
   enrolledAt  DateTime  @default(now())
   completedAt DateTime?
-  progress    Float     @default(0) // 0-100
+  progress    Float     @default(0)
 
   @@unique([userId, courseId])
+  @@index([userId])
+  @@index([courseId])
+  @@index([enrolledAt])
 }
 
 model Progress {
@@ -123,34 +238,28 @@ model Progress {
   lessonId     String
   lesson       Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   completed    Boolean  @default(false)
-  timeSpent    Int?     // in seconds
+  timeSpent    Int?
   lastAccessAt DateTime @default(now())
 
   @@unique([userId, lessonId])
+  @@index([userId])
+  @@index([lessonId])
 }
 
 model Submission {
-  id           String    @id @default(uuid())
+  id           String     @id @default(uuid())
   userId       String
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   assignmentId String
   assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
   answers      Json
   score        Int?
-  feedback     String?   @db.Text
-  submittedAt  DateTime  @default(now())
+  feedback     String?    @db.Text
+  submittedAt  DateTime   @default(now())
   gradedAt     DateTime?
-  
-  @@unique([userId, assignmentId])
-}
 
-model Applicant {
-  id              String          @id @default(uuid())
-  firstName       String
-  lastName        String
-  email           String          @unique
-  phone           String
-  courseOfInterest CourseOfInterest
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  @@unique([userId, assignmentId])
+  @@index([userId])
+  @@index([assignmentId])
+  @@index([submittedAt])
 }

@@ -39,7 +39,10 @@ function recordFailedAttempt(email: string) {
 }
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  // Note: PrismaAdapter is commented out because it conflicts with credentials provider
+  // The adapter expects database sessions, but we use JWT strategy
+  // Uncomment if you want to use OAuth providers with database sessions
+  // adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: 'Credentials',

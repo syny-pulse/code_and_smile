@@ -5,8 +5,27 @@ import { getToken } from 'next-auth/jwt';
 const protectedPaths = [
   '/learner',
   '/tutor',
-  // add other protected routes here
+  '/admin',
 ];
+
+// Role-based access control mapping
+const roleAccessMap: Record<string, string[]> = {
+  '/admin': ['ADMIN'],
+  '/tutor': ['ADMIN', 'TUTOR'],
+  '/learner': ['ADMIN', 'TUTOR', 'LEARNER', 'APPLICANT'],
+};
+
+// Get the appropriate dashboard for a role
+function getDashboardForRole(role: string): string {
+  switch (role) {
+    case 'ADMIN':
+      return '/admin/dashboard';
+    case 'TUTOR':
+      return '/tutor/dashboard';
+    default:
+      return '/learner/dashboard';
+  }
+}
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -21,6 +40,21 @@ export async function middleware(req: NextRequest) {
       signInUrl.searchParams.set('callbackUrl', req.url);
       return NextResponse.redirect(signInUrl);
     }
+
+    // Check role-based access
+    const userRole = token.role as string;
+
+    // Find which protected path this request matches
+    for (const [path, allowedRoles] of Object.entries(roleAccessMap)) {
+      if (pathname.startsWith(path)) {
+        if (!allowedRoles.includes(userRole)) {
+          // User doesn't have permission - redirect to their appropriate dashboard
+          const redirectUrl = new URL(getDashboardForRole(userRole), req.url);
+          return NextResponse.redirect(redirectUrl);
+        }
+        break;
+      }
+    }
   }
 
   return NextResponse.next();
@@ -28,5 +62,5 @@ export async function middleware(req: NextRequest) {
 
 // Specify the paths where middleware should run
 export const config = {
-  matcher: ['/learner/:path*', '/tutor/:path*'],
+  matcher: ['/learner/:path*', '/tutor/:path*', '/admin/:path*'],
 };
