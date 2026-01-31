@@ -169,10 +169,10 @@ export default function Home() {
   const ctaAnimation = useScrollAnimation(0.1);
 
   // Animated counters
-  const studentsCount = useCountUp(94, 2000, statsAnimation.isVisible);
-  const coursesCount = useCountUp(4, 1500, statsAnimation.isVisible);
-  const graduatesCount = useCountUp(1, 2000, statsAnimation.isVisible);
-  const partnersCount = useCountUp(5, 1500, statsAnimation.isVisible);
+  const studentsCount = useCountUp(154, 2000, statsAnimation.isVisible);
+  const neverTouchedComputer = useCountUp(78, 1500, statsAnimation.isVisible);
+  const coursesCount = useCountUp(4, 2000, statsAnimation.isVisible);
+  const femaleParticipation = useCountUp(67, 1500, statsAnimation.isVisible);
 
   const programs = [
     {
@@ -274,7 +274,7 @@ export default function Home() {
               </h1>
 
               <p className="text-lg sm:text-xl text-gray-600 max-w-xl leading-relaxed">
-                We provide youth from Uganda's last mile rural areas with digital skills to compete in the global digital economy.
+                Our work ensures that youth from Uganda's last mile rural areas are not locked out of the digital economy.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
@@ -343,9 +343,9 @@ export default function Home() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { number: studentsCount, suffix: '', label: 'Participants Reached', color: '#267fc3' },
-              { number: coursesCount, suffix: '', label: 'Specialization Pathways', color: '#ffc82e' },
-              { number: graduatesCount, suffix: '', label: 'Innovation Hub', color: '#267fc3' },
-              { number: partnersCount, suffix: '', label: 'Official Partners', color: '#ffc82e' },
+              { number: neverTouchedComputer, suffix: '%', label: 'First Time Computer Interaction', color: '#ffc82e' },
+              { number: femaleParticipation, suffix: '%', label: 'Female Participation', color: '#267fc3' },
+              { number: coursesCount, suffix: '', label: 'Courses Offered', color: '#ffc82e' },
             ].map((stat, index) => (
               <div
                 key={index}
@@ -445,7 +445,7 @@ export default function Home() {
                   {[
                     { stat: '80%', text: 'of jobs require digital skills' },
                     { stat: '3x', text: 'higher earning potential' },
-                    { stat: '60%', text: 'of youth unemployed in rural areas' },
+                    { stat: '70%', text: 'of youth in rural areas are NEET' },
                   ].map((item, i) => (
                     <div key={i} className="flex items-center gap-4 bg-white rounded-xl p-4 shadow-sm">
                       <div className="text-2xl font-bold text-[#267fc3]">{item.stat}</div>
@@ -674,7 +674,7 @@ export default function Home() {
             <div className="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-[#ffc82e]/20 hover:-translate-y-2">
               <div className="relative h-64 overflow-hidden">
                 <Image
-                  src="/ignite-program.jpg"
+                  src="/school-outreach.jpg"
                   alt="The Ignite Program"
                   width={400}
                   height={300}
@@ -683,7 +683,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#ffc82e] rounded-full mb-2">
-                    <span className="text-xs font-semibold text-gray-900">Holiday Program</span>
+                    <span className="text-xs font-semibold text-gray-900">Early Skilling</span>
                   </div>
                 </div>
               </div>
@@ -692,21 +692,21 @@ export default function Home() {
                   The Ignite Program
                 </h3>
                 <p className="text-gray-600 leading-relaxed mb-6">
-                  Provides holiday makers - the next generation of digital changemakers - with digital literacy. During school breaks, young learners engage in fun, interactive sessions that build foundational digital skills.
+                  We deploy mobile labs to skill school children - the next generation of digital changemakers - with digital literacy. Young learners engage in fun, interactive sessions that build foundational digital skills.
                 </p>
                 <div className="flex flex-wrap gap-2">
                   <span className="px-3 py-1.5 bg-[#ffc82e]/20 text-gray-700 rounded-full text-xs font-medium">Digital Literacy</span>
-                  <span className="px-3 py-1.5 bg-[#ffc82e]/20 text-gray-700 rounded-full text-xs font-medium">Coding Basics</span>
-                  <span className="px-3 py-1.5 bg-[#ffc82e]/20 text-gray-700 rounded-full text-xs font-medium">Creative Tech</span>
+                  <span className="px-3 py-1.5 bg-[#ffc82e]/20 text-gray-700 rounded-full text-xs font-medium">Mobile Labs</span>
+                  <span className="px-3 py-1.5 bg-[#ffc82e]/20 text-gray-700 rounded-full text-xs font-medium">School Partnerships</span>
                 </div>
               </div>
             </div>
 
-            {/* School Outreaches Project */}
+            {/* Digital Financial Literacy */}
             <div className="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-[#267fc3]/20 hover:-translate-y-2">
               <div className="relative h-64 overflow-hidden">
                 <Image
-                  src="/school-outreach.jpg"
+                  src="/digital-financial-literacy.jpg"
                   alt="School Outreaches Project"
                   width={400}
                   height={300}
@@ -715,21 +715,21 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#267fc3] rounded-full mb-2">
-                    <span className="text-xs font-semibold text-white">Mobile Learning</span>
+                    <span className="text-xs font-semibold text-white">Financial Literacy</span>
                   </div>
                 </div>
               </div>
               <div className="p-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  School Outreaches Project
+                  Digital Financial Literacy
                 </h3>
                 <p className="text-gray-600 leading-relaxed mb-6">
-                  Makes school outreaches to bring digital education directly to rural schools. Through our mobile computer laboratories, we travel to partner schools, providing students with access to computers and hands-on digital skills training.
+                  We build and deploy digital tools to support youth and women entreprenuers leverage technology to improve efficiency, access financing and scale their businesses to support informal unbankable businesses access financial services.
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <span className="px-3 py-1.5 bg-[#267fc3]/10 text-[#267fc3] rounded-full text-xs font-medium">Mobile Labs</span>
-                  <span className="px-3 py-1.5 bg-[#267fc3]/10 text-[#267fc3] rounded-full text-xs font-medium">School Partnerships</span>
-                  <span className="px-3 py-1.5 bg-[#267fc3]/10 text-[#267fc3] rounded-full text-xs font-medium">Basic Computing</span>
+                  <span className="px-3 py-1.5 bg-[#267fc3]/10 text-[#267fc3] rounded-full text-xs font-medium">Digital Literacy</span>
+                  <span className="px-3 py-1.5 bg-[#267fc3]/10 text-[#267fc3] rounded-full text-xs font-medium">Financial Literacy</span>
+                  <span className="px-3 py-1.5 bg-[#267fc3]/10 text-[#267fc3] rounded-full text-xs font-medium">Entreprenuership Support</span>
                 </div>
               </div>
             </div>
