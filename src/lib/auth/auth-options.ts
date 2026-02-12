@@ -12,6 +12,9 @@ const failedLoginAttempts: Record<string, { count: number; lastAttempt: number }
 const MAX_ATTEMPTS = 5;
 const LOCK_TIME = 15 * 60 * 1000; // 15 minutes
 
+// Inactivity timeout configuration
+export const INACTIVITY_TIMEOUT = 15 * 60 * 1000; // 15 minutes in milliseconds
+
 function isLocked(email: string) {
   const attempt = failedLoginAttempts[email];
   if (!attempt) return false;
@@ -70,6 +73,11 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
+        if (!user.isActive) {
+          console.warn(`Failed login attempt for inactive user: ${credentials.email}`);
+          return null;
+        }
+
         const isValidPassword = await bcrypt.compare(
           credentials.password,
           user.password
@@ -85,6 +93,12 @@ export const authOptions: NextAuthOptions = {
         if (failedLoginAttempts[credentials.email]) {
           delete failedLoginAttempts[credentials.email];
         }
+
+        // Update lastLoggedIn timestamp
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { lastLoggedIn: new Date() },
+        });
 
         return {
           id: user.id,
@@ -106,8 +120,8 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-    updateAge: 24 * 60 * 60, // 24 hours
+    maxAge: 30 * 24 * 60 * 60, // 30 days (max session lifetime)
+    updateAge: 60, // Update token every minute to track activity
   },
   pages: {
     signIn: '/auth/signin',
@@ -116,11 +130,16 @@ export const authOptions: NextAuthOptions = {
     verifyRequest: '/auth/verify-request',
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
+        // Initial sign in - set user data and activity timestamp
         token.id = user.id;
         token.role = user.role;
         token.username = user.username;
+        token.lastActivity = Date.now();
+      } else if (trigger === 'update' || !token.lastActivity) {
+        // Update activity timestamp on session refresh
+        token.lastActivity = Date.now();
       }
       return token;
     },
@@ -131,6 +150,18 @@ export const authOptions: NextAuthOptions = {
         session.user.username = token.username as string;
       }
       return session;
+    },
+    async redirect({ url, baseUrl }) {
+      // Handle role-based redirect after signin
+      // The URL will contain the callbackUrl if specified
+      if (url.startsWith(baseUrl)) {
+        return url;
+      }
+      // Default redirects
+      if (url.startsWith('/')) {
+        return `${baseUrl}${url}`;
+      }
+      return baseUrl;
     },
   },
 };

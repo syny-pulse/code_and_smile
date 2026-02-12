@@ -33,7 +33,7 @@ export default function LessonCard({ lesson }: LessonCardProps) {
         </p>
 
         <Link
-          href={`/lessons/${lesson.id}`}
+          href={`/learner/lessons/${lesson.id}`}
           className="mt-4 inline-flex items-center text-sm text-blue-600 hover:underline dark:text-blue-400"
         >
           View Lesson

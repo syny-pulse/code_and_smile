@@ -7,6 +7,7 @@ import Memorial from './memorial';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -15,20 +16,29 @@ const Footer = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('https://formspree.io/f/xpwrpryp', {
+      const response = await fetch('/api/newsletter', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email: email,
-          _subject: 'Newsletter Subscription',
+          firstName: firstName,
         }),
       });
 
       if (response.ok) {
         setIsSubmitted(true);
         setEmail('');
+        setFirstName('');
+      } else {
+        const errorData = await response.json();
+        // If already subscribed, we still show success or a specific message?
+        // The API returns 200 for "Already subscribed", so response.ok checks 200-299.
+        // But if validation fails (400) or error (500), we might want to alert.
+        if (response.status === 400) {
+          alert(errorData.message);
+        }
       }
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -176,18 +186,29 @@ const Footer = () => {
             {!isSubmitted ? (
               <>
                 <p className="text-gray-400 mb-4 text-sm leading-relaxed">
-                  Get the latest updates on new courses and student success stories.
+                  Be the first to receive stories about the impact we are creating through our monthly newsletters.
                 </p>
                 <form onSubmit={handleSubmit} className="space-y-3">
-                  <div className="relative">
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter your email"
-                      required
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#267fc3] focus:ring-2 focus:ring-[#267fc3]/20 transition-all hover:bg-white/10"
-                    />
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        placeholder="First Name"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#267fc3] focus:ring-2 focus:ring-[#267fc3]/20 transition-all hover:bg-white/10"
+                      />
+                    </div>
+                    <div className="relative">
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Enter your email"
+                        required
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#267fc3] focus:ring-2 focus:ring-[#267fc3]/20 transition-all hover:bg-white/10"
+                      />
+                    </div>
                   </div>
                   <button
                     type="submit"

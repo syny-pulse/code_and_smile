@@ -22,5 +22,6 @@ declare module "next-auth/jwt" {
     id: string;
     username: string;
     role: "ADMIN" | "TUTOR" | "LEARNER" | "APPLICANT";
+    lastActivity?: number;
   }
 }

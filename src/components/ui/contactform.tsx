@@ -26,7 +26,7 @@ const ContactFormPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('https://formspree.io/f/xkgbjrpq', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -43,7 +43,9 @@ const ContactFormPopup = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
         });
         setShowThankYou(true);
       } else {
-        throw new Error('Form submission failed');
+        const errorData = await response.json();
+        console.error('Submission error:', errorData);
+        throw new Error(errorData.message || 'Form submission failed');
       }
     } catch (error) {
       console.error('Error submitting form:', error);

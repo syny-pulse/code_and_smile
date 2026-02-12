@@ -257,24 +257,23 @@ export default function Home() {
         >
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Left Content */}
-            <div className="space-y-8">
+            <div className="space-y-4">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#267fc3]/10 rounded-full">
                 <span className="w-2 h-2 bg-[#267fc3] rounded-full animate-pulse" />
-                <span className="text-sm font-medium text-[#267fc3]">Empowering Rural Youth</span>
+                <span className="text-sm font-medium text-[#267fc3]">Opportunities are everywhere. Access is not!</span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.1] tracking-tight">
-                <span className="text-gray-900">Digital inclusion</span>
+              <h1 className="font-extrabold leading-[1.1] tracking-tight">
+                <span className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl text-gray-900">Building Access to</span>
                 <br />
-                <span className="text-[#267fc3]">is a human right </span>
                 <span className="relative inline-block">
-                  <span className="relative z-10 text-[#267fc3]">for all!</span>
+                  <span className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl relative z-10 text-[#267fc3]">Digital Opportunities</span>
                   <span className="absolute bottom-2 left-0 w-full h-3 bg-[#ffc82e]/40 -z-0" />
                 </span>
               </h1>
 
-              <p className="text-lg sm:text-xl text-gray-600 max-w-xl leading-relaxed">
-                Our work ensures that youth from Uganda's last mile rural areas are not locked out of the digital economy.
+              <p className="text-md sm:text-lg text-gray-600 max-w-lg leading-relaxed">
+                Our work ensures that children, youth and women from Uganda's last mile rural areas have access to digital skills and tools to support them access opportunities for employment and entrepreneurship.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
@@ -386,7 +385,7 @@ export default function Home() {
 
               <div className="space-y-4 text-gray-600 text-lg leading-relaxed">
                 <p>
-                  The digital world is evolving rapidly. Tech skills are now vital for every job. While urban youth have access to digital skills, affordable internet, and electricity, these remain a luxury in rural areas.
+                  The digital world is evolving rapidly. Opportunities in the digital world are immense, but access is not evenly distributed. While urban communities have access to digital opportunities like skilling, affordable internet, and electricity, these remain a luxury in rural areas.
                 </p>
                 <p>
                   At Code and Smile Foundation, we work to remove all systematic barriers that prevent rural youth from accessing digital education and opportunities.
@@ -861,7 +860,7 @@ export default function Home() {
               Join us in bridging the <span className="text-[#ffc82e]">digital divide</span>
             </h2>
             <p className="text-xl text-white/80 mb-10 max-w-2xl mx-auto">
-              Together, we can create opportunities for rural youth to thrive in the digital economy. Every contribution makes a difference.
+              Together, we can create opportunities for rural youth to thrive in the digital economy. A donation of $690 transforms a youth who has never touched a computer into employment ready in just 6 months.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

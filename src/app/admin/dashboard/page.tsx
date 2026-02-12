@@ -48,12 +48,14 @@ async function getAdminDashboardData() {
   const tutorCount = userCounts.find(u => u.role === 'TUTOR')?._count.id || 0;
   const learnerCount = userCounts.find(u => u.role === 'LEARNER')?._count.id || 0;
 
-  // Get total courses
-  const totalCourses = await prisma.course.count();
-  const publishedCourses = await prisma.course.count({ where: { isPublished: true } });
-
-  // Get total enrollments
-  const totalEnrollments = await prisma.enrollment.count();
+  // Get total courses (unique courseTitles from Lessons)
+  const uniqueCourses = await prisma.lesson.groupBy({
+    by: ['courseTitle'],
+    _count: { id: true }
+  });
+  const totalCourses = uniqueCourses.length;
+  // "Published" concept is removed, so we'll just show total active courses
+  const publishedCourses = totalCourses;
 
   // Get total applications
   const totalApplications = await prisma.applicant.count();
@@ -93,7 +95,6 @@ async function getAdminDashboardData() {
     learnerCount,
     totalCourses,
     publishedCourses,
-    totalEnrollments,
     totalApplications,
     recentUsers,
     recentApplications,
@@ -107,7 +108,7 @@ export default async function AdminDashboard() {
     learnerCount,
     totalCourses,
     publishedCourses,
-    totalEnrollments,
+    // totalEnrollments, // Removed
     totalApplications,
     recentUsers,
     recentApplications,
@@ -195,28 +196,7 @@ export default async function AdminDashboard() {
             </div>
           </div>
 
-          {/* Enrollments Card */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-                  Total Enrollments
-                </p>
-                <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {totalEnrollments}
-                </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  Active learners
-                </p>
-              </div>
-              <div
-                className="h-12 w-12 rounded-lg flex items-center justify-center"
-                style={{ backgroundColor: '#ffc82e20' }}
-              >
-                <GraduationIcon className="w-6 h-6" />
-              </div>
-            </div>
-          </div>
+          {/* Enrollments Card Removed */}
 
           {/* Applications Card */}
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-200">
@@ -237,6 +217,29 @@ export default async function AdminDashboard() {
                 style={{ backgroundColor: '#FF6F6120' }}
               >
                 <FileTextIcon className="w-6 h-6" />
+              </div>
+            </div>
+          </div>
+
+          {/* Tutors Card */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+                  Total Tutors
+                </p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                  {tutorCount}
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  Active instructors
+                </p>
+              </div>
+              <div
+                className="h-12 w-12 rounded-lg flex items-center justify-center"
+                style={{ backgroundColor: '#ffc82e20' }}
+              >
+                <GraduationIcon className="w-6 h-6" />
               </div>
             </div>
           </div>
@@ -289,10 +292,10 @@ export default async function AdminDashboard() {
                 </div>
               )}
             </div>
-          </div>
+          </div >
 
           {/* Recent Applications */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+          < div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden" >
             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                 Recent Applications
@@ -336,9 +339,9 @@ export default async function AdminDashboard() {
                 </div>
               )}
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          </div >
+        </div >
+      </div >
+    </div >
   );
 }

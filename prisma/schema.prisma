@@ -1,7 +1,8 @@
 // This is your Prisma schema file
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 generator client {
@@ -32,10 +33,12 @@ enum AssignmentType {
 }
 
 enum CourseOfInterest {
+  BASIC_DIGITAL_LITERACY
   DIGITAL_MARKETING
-  COMPUTER_BASICS
   GRAPHICS_DESIGN
+  PROJECT_MANAGEMENT
   WEB_DESIGN
+  DIGITAL_FINANCIAL_LITERACY
 }
 
 // =====================================================
@@ -55,20 +58,25 @@ model User {
   emailVerifiedAt DateTime?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+  isActive        Boolean   @default(true)
+  lastLoggedIn    DateTime?
+  coursesOfInterest String[]
 
   // NextAuth Relations
   accounts    Account[]
   sessions    Session[]
 
-  // Application Relations
-  courses     Course[]     // Courses created as tutor
-  enrollments Enrollment[]
+// Application Relations
+  // courses     Course[]     // Removed
+  // enrollments Enrollment[] // Removed
   progress    Progress[]
   submissions Submission[]
 
   @@index([role])
   @@index([createdAt])
 }
+
+// Enrollment model removed (using coursesOfInterest in User model)
 
 // OAuth Account - Links external providers (Google, GitHub) to users
 model Account {
@@ -150,34 +158,9 @@ model Applicant {
   @@index([createdAt])
 }
 
-model Course {
-  id          String      @id @default(uuid())
-  tutorId     String
-  tutor       User        @relation(fields: [tutorId], references: [id])
-  title       String
-  description String      @db.Text
-  level       CourseLevel @default(BEGINNER)
-  duration    Int?
-  thumbnail   String?
-  isPublished Boolean     @default(false)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-
-  // Relations
-  lessons     Lesson[]
-  assignments Assignment[]
-  enrollments Enrollment[]
-
-  @@index([tutorId])
-  @@index([level])
-  @@index([isPublished])
-  @@index([createdAt])
-}
-
 model Lesson {
   id          String   @id @default(uuid())
-  courseId    String
-  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseTitle String
   title       String
   description String?  @db.Text
   content     String?  @db.Text
@@ -188,47 +171,50 @@ model Lesson {
   updatedAt   DateTime @updatedAt
 
   // Relations
-  progress Progress[]
+  progress    Progress[]
+  modules     Module[]
+  assignments Assignment[]
 
-  @@index([courseId])
+  @@index([courseTitle])
+  @@index([order])
+}
+
+model Module {
+  id        String   @id @default(uuid())
+  lessonId  String
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  title     String
+  resources Json     // Array of {name, url} objects
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([lessonId])
   @@index([order])
 }
 
 model Assignment {
-  id          String         @id @default(uuid())
-  courseId    String
-  course      Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  title       String
-  description String         @db.Text
-  type        AssignmentType
-  maxScore    Int            @default(100)
-  timeLimit   Int?
-  dueDate     DateTime?
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  id                String         @id @default(uuid())
+  courseTitle       String
+  lessonId          String?
+  lesson            Lesson?        @relation(fields: [lessonId], references: [id])
+  title             String
+  description       String         @db.Text
+  type              AssignmentType
+  submissionFormats String[]       // e.g., ["PDF", "DOC", "LINK"]
+  maxScore          Int            @default(100)
+  timeLimit         Int?
+  dueDate           DateTime?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
 
   // Relations
   submissions Submission[]
 
-  @@index([courseId])
+  @@index([courseTitle])
+  @@index([lessonId])
   @@index([type])
   @@index([dueDate])
-}
-
-model Enrollment {
-  id          String    @id @default(uuid())
-  userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  courseId    String
-  course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  enrolledAt  DateTime  @default(now())
-  completedAt DateTime?
-  progress    Float     @default(0)
-
-  @@unique([userId, courseId])
-  @@index([userId])
-  @@index([courseId])
-  @@index([enrolledAt])
 }
 
 model Progress {
@@ -238,6 +224,7 @@ model Progress {
   lessonId     String
   lesson       Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   completed    Boolean  @default(false)
+  completedModules String[] // Array of Module IDs
   timeSpent    Int?
   lastAccessAt DateTime @default(now())
 
@@ -245,6 +232,7 @@ model Progress {
   @@index([userId])
   @@index([lessonId])
 }
+
 
 model Submission {
   id           String     @id @default(uuid())
@@ -262,4 +250,23 @@ model Submission {
   @@index([userId])
   @@index([assignmentId])
   @@index([submittedAt])
+}
+
+model ContactSubmission {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  subject   String
+  message   String   @db.Text
+  status    String   @default("NEW") // NEW, READ, REPLIED
+  createdAt DateTime @default(now())
+}
+
+model NewsletterSubscription {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  firstName    String?
+
+  isActive     Boolean  @default(true)
+  subscribedAt DateTime @default(now())
 }

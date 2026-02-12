@@ -22,7 +22,7 @@ const Navbar = () => {
     { href: '/about', label: 'About' },
     { href: '/courses', label: 'Courses' },
     { href: '/contact', label: 'Contact' },
-    { href: '/learner', label: 'Learner Portal' },
+    { href: '/auth/signin', label: 'Learner Portal' },
   ];
 
   return (

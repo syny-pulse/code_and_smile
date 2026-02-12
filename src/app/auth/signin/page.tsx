@@ -18,6 +18,8 @@ function SignInForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/';
   const registered = searchParams.get('registered');
+  const sessionExpired = searchParams.get('sessionExpired');
+
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -30,41 +32,41 @@ function SignInForm() {
     setError('');
     setIsLoading(true);
 
-    const result = await signIn('credentials', {
-      redirect: false,
-      email,
-      password,
-      callbackUrl,
-    });
+    try {
+      // First, verify credentials and get user role via API
+      const verifyResponse = await fetch('/api/auth/verify-credentials', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
 
-    setIsLoading(false);
+      const verifyData = await verifyResponse.json();
 
-    if (result?.error) {
-      // Provide more specific error messages based on the error
-      if (result.error === 'CredentialsSignin') {
-        setError('Invalid email or password. Please check your credentials and try again.');
-      } else if (result.error.includes('locked')) {
-        setError('Your account has been temporarily locked due to too many failed attempts. Please try again later.');
-      } else {
-        setError('Unable to sign in. Please try again.');
-      }
-    } else if (result?.ok) {
-      // Get the session to determine user role for redirection
-      const session = await getSession();
-      if (session?.user?.role) {
-        const role = session.user.role;
-        // If callbackUrl is just '/' or empty, redirect based on role
-        // Otherwise, respect the original callbackUrl
-        if (callbackUrl === '/' || !callbackUrl) {
-          router.push(roleRedirectPaths[role] || '/learner/dashboard');
+      if (!verifyResponse.ok || !verifyData.success) {
+        setIsLoading(false);
+        if (verifyData.error?.includes('locked')) {
+          setError('Your account has been temporarily locked due to too many failed attempts. Please try again later.');
         } else {
-          router.push(callbackUrl);
+          setError(verifyData.error || 'Invalid email or password. Please check your credentials and try again.');
         }
-      } else {
-        router.push(callbackUrl);
+        return;
       }
-    } else {
-      setError('Unexpected error occurred');
+
+      // Determine redirect URL based on role
+      const role = verifyData.role;
+      const targetUrl = roleRedirectPaths[role] || '/learner/dashboard';
+
+      // Now sign in with redirect - this will handle the auth cookie and redirect
+      await signIn('credentials', {
+        email,
+        password,
+        callbackUrl: targetUrl,
+        redirect: true,
+      });
+    } catch (err) {
+      setIsLoading(false);
+      setError('An error occurred during sign in. Please try again.');
+      console.error('Sign in error:', err);
     }
   };
 
@@ -77,22 +79,25 @@ function SignInForm() {
       </div>
 
       <div className="w-full max-w-md relative z-10">
-        {/* Logo/Brand */}
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-3 group mb-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#267fc3] to-[#1a5a8a] flex items-center justify-center transition-transform group-hover:scale-110 duration-300">
-              <span className="text-white font-bold text-2xl">C</span>
-            </div>
-            <span className="text-2xl font-bold text-gray-900">CAS Academy</span>
-          </Link>
-        </div>
-
         {/* Login Card */}
         <div className="bg-white rounded-3xl p-8 lg:p-10 shadow-xl border border-gray-100">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
             <p className="text-gray-600">Sign in to continue your learning journey</p>
           </div>
+
+          {/* Session Expired Message */}
+          {sessionExpired && (
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 flex items-start gap-3">
+              <svg className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <div>
+                <p className="text-amber-800 font-semibold">Session Expired</p>
+                <p className="text-amber-700 text-sm">Your session has expired due to inactivity. Please sign in again.</p>
+              </div>
+            </div>
+          )}
 
           {/* Registration Success Message */}
           {registered && (
@@ -191,16 +196,6 @@ function SignInForm() {
               )}
             </button>
           </form>
-
-          {/* Additional Links */}
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              Don&apos;t have an account?{' '}
-              <Link href="/auth/signup" className="text-[#267fc3] hover:text-[#1a5a8a] font-semibold transition-colors">
-                Sign up
-              </Link>
-            </p>
-          </div>
         </div>
 
         {/* Back to Home */}

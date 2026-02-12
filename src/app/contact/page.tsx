@@ -84,7 +84,7 @@ export default function Contact() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('https://formspree.io/f/xkgbjrpq', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -93,9 +93,14 @@ export default function Contact() {
       if (response.ok) {
         setFormData({ name: '', email: '', subject: '', message: '' });
         setShowThankYou(true);
+      } else {
+        const errorData = await response.json();
+        console.error('Submission error:', errorData);
+        alert('There was an error sending your message. Please try again.');
       }
     } catch (error) {
       console.error('Error:', error);
+      alert('There was an error sending your message. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

@@ -11,9 +11,10 @@ interface LayoutWrapperProps {
 
 export default function LayoutWrapper({ children }: LayoutWrapperProps) {
   const pathname = usePathname();
+  // console.log('Current path:', pathname); // Debug log
 
   // Paths where header and footer should be hidden
-  const hideLayoutPaths = ['/tutor', '/learner/dashboard'];
+  const hideLayoutPaths = ['/admin', '/tutor', '/learner', '/auth'];
 
   const shouldHideLayout = hideLayoutPaths.some((path) =>
     pathname?.startsWith(path)

@@ -11,64 +11,57 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const courses = await prisma.course.findMany({
-      where: { tutorId: user.id },
-      include: {
-        enrollments: true,
-        assignments: {
-          select: {
-            id: true,
-          },
-        },
+    // Get user's interests (Tutor)
+    const dbUser = await prisma.user.findUnique({
+      where: { id: user.id },
+      select: { coursesOfInterest: true }
+    });
+    const courseTitles = dbUser?.coursesOfInterest || [];
+
+    // Get counts
+    // Count learners who have these courses in their interests
+    const interestedUsers = await prisma.user.findMany({
+      where: {
+        role: 'LEARNER',
+        coursesOfInterest: { hasSome: courseTitles }
       },
+      select: { coursesOfInterest: true }
     });
 
-    // Map courses to include counts
-    const coursesWithCounts = courses.map(course => ({
-      id: course.id,
-      title: course.title,
-      enrollmentsCount: course.enrollments.length,
-      submissionsCount: course.assignments.length,
-      description: course.description,
-    }));
+    // Count per course
+    const enrollmentCounts = new Map<string, number>();
+    courseTitles.forEach(title => {
+      const count = interestedUsers.filter(u => u.coursesOfInterest.includes(title)).length;
+      enrollmentCounts.set(title, count);
+    });
+
+    const assignmentCounts = await prisma.assignment.groupBy({
+      by: ['courseTitle'],
+      where: { courseTitle: { in: courseTitles } },
+      _count: { id: true }
+    });
+
+    // Map to course objects
+    const coursesWithCounts = courseTitles.map(title => {
+      const enrollCount = enrollmentCounts.get(title) || 0;
+      const assignCount = assignmentCounts.find(c => c.courseTitle === title)?._count.id || 0;
+
+      return {
+        id: title,
+        title: title.replace(/_/g, ' '),
+        enrollmentsCount: enrollCount,
+        submissionsCount: assignCount, // Maintaining field name from original code
+        description: '', // Description is no longer centralized
+      };
+    });
 
     return NextResponse.json(coursesWithCounts);
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Failed to fetch courses' }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
-  try {
-    const user = await getCurrentUser();
-    if (!user || !user.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const data = await request.json();
-
-    console.log('Received POST data:', data);
-
-    // Validate required fields
-    const { title, description } = data;
-    const missingFields: string[] = [];
-    if (!title) missingFields.push('title');
-    if (!description) missingFields.push('description');
-    if (missingFields.length > 0) {
-      console.log('Missing required fields:', missingFields);
-      return NextResponse.json({ error: `Missing required fields: ${missingFields.join(', ')}` }, { status: 400 });
-    }
-
-    const newCourse = await prisma.course.create({
-      data: {
-        title,
-        description,
-        tutorId: user.id,
-      },
-    });
-
-    return NextResponse.json(newCourse, { status: 201 });
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to create course' }, { status: 500 });
-  }
+  return NextResponse.json({ error: 'Course creation is now handled automatically via Lesson creation.' }, { status: 405 });
 }
