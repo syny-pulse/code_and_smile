@@ -1,0 +1,23 @@
+{
+    "name": "CAS Academy",
+    "short_name": "CAS Academy",
+    "description": "CAS Academy offers comprehensive courses in coding and digital literacy training.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#267fc3",
+    "icons": [
+        {
+            "src": "/cas_favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any"
+        },
+        {
+            "src": "/cas_logo.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "maskable"
+        }
+    ]
+}

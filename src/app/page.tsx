@@ -264,10 +264,10 @@ export default function Home() {
               </div>
 
               <h1 className="font-extrabold leading-[1.1] tracking-tight">
-                <span className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl text-gray-900">Building Access to</span>
+                <span className="text-4xl sm:text-3xl lg:text-4xl xl:text-5xl text-gray-900">Building Access to</span>
                 <br />
                 <span className="relative inline-block">
-                  <span className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl relative z-10 text-[#267fc3]">Digital Opportunities</span>
+                  <span className="text-4xl sm:text-3xl lg:text-4xl xl:text-5xl relative z-10 text-[#267fc3]">Digital Opportunities</span>
                   <span className="absolute bottom-2 left-0 w-full h-3 bg-[#ffc82e]/40 -z-0" />
                 </span>
               </h1>
@@ -283,13 +283,12 @@ export default function Home() {
                     <ArrowRightIcon />
                   </button>
                 </Link>
-                <button
-                  className="btn-secondary"
-                  onClick={() => window.open('https://yambaafrica.com/campaigns/CODE%20AND%20SMILE%20ACADEMY?id=8', '_blank')}
-                >
-                  <HeartIcon />
-                  Support Our Mission
-                </button>
+                <Link href="/donate">
+                  <button className="btn-secondary">
+                    <HeartIcon />
+                    Support Our Mission
+                  </button>
+                </Link>
               </div>
             </div>
 
@@ -864,13 +863,12 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                className="btn-secondary"
-                onClick={() => window.open('https://yambaafrica.com/campaigns/CODE%20AND%20SMILE%20ACADEMY?id=8', '_blank')}
-              >
-                <HeartIcon />
-                Donate Now
-              </button>
+              <Link href="/donate">
+                <button className="btn-secondary">
+                  <HeartIcon />
+                  Donate Now
+                </button>
+              </Link>
               <button
                 className="bg-white text-[#267fc3] px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 hover:-translate-y-1"
                 onClick={() => setIsContactFormOpen(true)}

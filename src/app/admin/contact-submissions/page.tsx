@@ -19,11 +19,11 @@ export default async function ContactSubmissionsPage() {
                         <thead className="bg-gray-50 dark:bg-gray-900/50 text-xs uppercase font-semibold text-gray-500 dark:text-gray-400">
                             <tr>
                                 <th className="px-6 py-4">Status</th>
-                                <th className="px-6 py-4">Date</th>
+                                <th className="px-6 py-4 hidden sm:table-cell">Date</th>
                                 <th className="px-6 py-4">Name</th>
-                                <th className="px-6 py-4">Email</th>
-                                <th className="px-6 py-4">Subject</th>
-                                <th className="px-6 py-4">Message</th>
+                                <th className="px-6 py-4 hidden md:table-cell">Email</th>
+                                <th className="px-6 py-4 hidden lg:table-cell">Subject</th>
+                                <th className="px-6 py-4 hidden xl:table-cell">Message</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -44,19 +44,19 @@ export default async function ContactSubmissionsPage() {
                                                 {item.status}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
+                                        <td className="px-6 py-4 hidden sm:table-cell whitespace-nowrap">
                                             {new Date(item.createdAt).toLocaleDateString()}
                                         </td>
                                         <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">
                                             {item.name}
                                         </td>
-                                        <td className="px-6 py-4 text-[#267fc3]">
+                                        <td className="px-6 py-4 hidden md:table-cell text-[#267fc3]">
                                             <a href={`mailto:${item.email}`}>{item.email}</a>
                                         </td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-6 py-4 hidden lg:table-cell">
                                             {item.subject}
                                         </td>
-                                        <td className="px-6 py-4 max-w-xs truncate" title={item.message}>
+                                        <td className="px-6 py-4 hidden xl:table-cell max-w-xs truncate" title={item.message}>
                                             {item.message}
                                         </td>
                                     </tr>

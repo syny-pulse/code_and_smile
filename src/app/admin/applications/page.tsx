@@ -22,9 +22,9 @@ export default async function AdminApplicationsPage() {
                         <thead className="bg-gray-50 dark:bg-gray-900/50 text-gray-900 dark:text-white font-medium">
                             <tr>
                                 <th className="px-6 py-4">Applicant</th>
-                                <th className="px-6 py-4">Contact</th>
-                                <th className="px-6 py-4">Course of Interest</th>
-                                <th className="px-6 py-4">Applied Date</th>
+                                <th className="px-6 py-4 hidden sm:table-cell">Contact</th>
+                                <th className="px-6 py-4">Course</th>
+                                <th className="px-6 py-4 hidden md:table-cell text-right">Applied Date</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -35,7 +35,7 @@ export default async function AdminApplicationsPage() {
                                             {app.firstName} {app.lastName}
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td className="px-6 py-4 hidden sm:table-cell">
                                         <div className="flex flex-col">
                                             <span className="text-gray-900 dark:text-white">{app.email}</span>
                                             <span className="text-xs text-gray-500">{app.phone}</span>
@@ -46,7 +46,7 @@ export default async function AdminApplicationsPage() {
                                             {app.courseOfInterest.replace(/_/g, ' ')}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td className="px-6 py-4 hidden md:table-cell text-right">
                                         {new Date(app.createdAt).toLocaleDateString()}
                                     </td>
                                 </tr>

@@ -84,8 +84,8 @@ export default function EditUserModal({ isOpen, onClose, user }: { isOpen: boole
     if (!isOpen || !user) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white dark:bg-gray-800 rounded-xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/50 sm:flex sm:items-center sm:justify-center p-0 sm:p-4 z-50">
+            <div className="bg-white dark:bg-gray-800 sm:rounded-xl max-w-lg w-full h-full sm:h-auto p-6 overflow-y-auto">
                 <h2 className="text-xl font-bold mb-4 dark:text-white">Edit User</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signOut } from 'next-auth/react';
 
 // SVG Icons matching design system
@@ -99,9 +99,16 @@ const navItems = [
     },
 ];
 
-export default function LearnerSidebar() {
+export default function LearnerSidebar({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }) {
     const pathname = usePathname();
     const [isCollapsed, setIsCollapsed] = useState(false);
+
+    // Close sidebar on mobile when route changes
+    useEffect(() => {
+        if (isOpen && onClose) {
+            onClose();
+        }
+    }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const toggleCollapse = () => {
         setIsCollapsed(!isCollapsed);
@@ -113,8 +120,10 @@ export default function LearnerSidebar() {
 
     return (
         <>
-            <nav className={`fixed top-0 left-0 h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex flex-col transition-all duration-300 z-40 ${isCollapsed ? 'w-16' : 'w-64'
-                }`}>
+            <nav className={`fixed top-0 left-0 h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex flex-col transition-all duration-300 z-40 
+                ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} 
+                ${isCollapsed ? 'lg:w-16' : 'lg:w-64'} 
+                w-64`}>
 
                 {/* Header */}
                 <div className="p-4 border-b border-gray-200 dark:border-gray-700">
@@ -140,7 +149,7 @@ export default function LearnerSidebar() {
 
                         <button
                             onClick={toggleCollapse}
-                            className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+                            className="hidden lg:block p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
                             title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
                         >
                             {isCollapsed ? (
@@ -161,8 +170,8 @@ export default function LearnerSidebar() {
                                 <Link
                                     href={href}
                                     className={`group flex items-center px-3 py-2.5 rounded-lg transition-all duration-200 ${isActive
-                                            ? 'bg-[#267fc3]/10 text-[#267fc3]'
-                                            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
+                                        ? 'bg-[#267fc3]/10 text-[#267fc3]'
+                                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
                                         }`}
                                     title={isCollapsed ? label : ''}
                                 >
@@ -209,10 +218,10 @@ export default function LearnerSidebar() {
             </nav>
 
             {/* Backdrop for mobile */}
-            {!isCollapsed && (
+            {isOpen && (
                 <div
-                    className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
-                    onClick={toggleCollapse}
+                    className="fixed inset-0 bg-black/50 z-30 lg:hidden backdrop-blur-sm transition-opacity duration-300"
+                    onClick={onClose}
                 />
             )}
         </>

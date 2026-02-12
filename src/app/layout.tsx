@@ -18,6 +18,14 @@ export const metadata = {
   icons: {
     icon: '/cas_favicon.svg',
   },
+  manifest: '/manifest.json',
+  themeColor: '#267fc3',
+  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'CAS Academy',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

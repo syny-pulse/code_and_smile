@@ -236,7 +236,7 @@ export default async function TutorDashboard() {
                                     <thead>
                                         <tr className="text-left">
                                             <th className="pb-4 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest pl-2">Assignment Name</th>
-                                            <th className="pb-4 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">Status</th>
+                                            <th className="pb-4 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest hidden sm:table-cell">Status</th>
                                             <th className="pb-4 text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest text-right pr-2">Due Date</th>
                                         </tr>
                                     </thead>
@@ -251,10 +251,10 @@ export default async function TutorDashboard() {
 
                                             return (
                                                 <tr key={assignment.id} className="group hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-all duration-200">
-                                                    <td className="py-5 pl-2">
-                                                        <p className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-[#267fc3] transition-colors">{assignment.title}</p>
-                                                    </td>
                                                     <td className="py-5">
+                                                        <p className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-[#267fc3] transition-colors line-clamp-1">{assignment.title}</p>
+                                                    </td>
+                                                    <td className="py-5 hidden sm:table-cell">
                                                         <span className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${urgencyStyles[urgency]}`}>
                                                             {urgency === 'urgent' ? 'Closing Soon' : 'Accepting Submissions'}
                                                         </span>

@@ -135,10 +135,10 @@ export default function AdminUsersPage() {
                         <thead className="bg-gray-50 dark:bg-gray-900/50 text-gray-900 dark:text-white font-medium">
                             <tr>
                                 <th className="px-6 py-4">User</th>
-                                <th className="px-6 py-4">Role</th>
-                                <th className="px-6 py-4">Status</th>
-                                <th className="px-6 py-4">Last Login</th>
-                                <th className="px-6 py-4">Actions</th>
+                                <th className="px-6 py-4 hidden sm:table-cell">Role</th>
+                                <th className="px-6 py-4 hidden md:table-cell">Status</th>
+                                <th className="px-6 py-4 hidden lg:table-cell">Last Login</th>
+                                <th className="px-6 py-4 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -171,7 +171,7 @@ export default function AdminUsersPage() {
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td className="px-6 py-4 hidden sm:table-cell">
                                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                                             ${user.role === 'ADMIN' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300' :
                                                 user.role === 'TUTOR' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' :
@@ -180,7 +180,7 @@ export default function AdminUsersPage() {
                                             {user.role}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td className="px-6 py-4 hidden md:table-cell">
                                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                                             ${user.isActive
                                                 ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
@@ -188,10 +188,10 @@ export default function AdminUsersPage() {
                                             {user.isActive ? 'Active' : 'Inactive'}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                                    <td className="px-6 py-4 hidden lg:table-cell text-sm text-gray-500 dark:text-gray-400">
                                         {formatDate(user.lastLoggedIn)}
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td className="px-6 py-4 text-right">
                                         <div className="flex items-center gap-2">
                                             {/* Resend Email - only for inactive users */}
                                             {!user.isActive && (

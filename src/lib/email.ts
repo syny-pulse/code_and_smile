@@ -122,7 +122,7 @@ export async function sendContactFormAdminAlert(data: { name: string; email: str
 }
 
 export async function sendWelcomeEmail(email: string, firstName: string, token: string) {
-  const setupUrl = `${process.env.NEXTAUTH_URL}/auth/set-password?token=${token}`;
+  const setupUrl = `${process.env.NEXTAUTH_URL}/auth/setup-password?token=${token}`;
 
   const html = `
     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; border: 1px solid #f0f0f0; border-radius: 24px; background-color: #ffffff;">
