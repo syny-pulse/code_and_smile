@@ -243,12 +243,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-gradient-to-br from-white via-blue-50/30 to-yellow-50/20">
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-gradient-to-br from-[#267fc3] via-[#1a5a8a] to-[#267fc3]">
         {/* Background decorative elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-[#267fc3]/5 rounded-full blur-3xl" />
+          <div className="absolute top-20 left-10 w-72 h-72 bg-white/5 rounded-full blur-3xl" />
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#ffc82e]/10 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-[#267fc3]/5 to-[#ffc82e]/5 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white/5 rounded-full blur-3xl" />
         </div>
 
         <div
@@ -258,27 +258,27 @@ export default function Home() {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Left Content */}
             <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#267fc3]/10 rounded-full">
-                <span className="w-2 h-2 bg-[#267fc3] rounded-full animate-pulse" />
-                <span className="text-sm font-medium text-[#267fc3]">Opportunities are everywhere. Access is not!</span>
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
+                <span className="w-2 h-2 bg-[#ffc82e] rounded-full animate-pulse" />
+                <span className="text-sm font-medium text-white/90">Opportunities are everywhere. Access is not!</span>
               </div>
 
               <h1 className="font-extrabold leading-[1.1] tracking-tight">
-                <span className="text-4xl sm:text-3xl lg:text-4xl xl:text-5xl text-gray-900">Building Access to</span>
+                <span className="text-4xl sm:text-3xl lg:text-4xl xl:text-5xl text-white">Building Access to</span>
                 <br />
                 <span className="relative inline-block">
-                  <span className="text-4xl sm:text-3xl lg:text-4xl xl:text-5xl relative z-10 text-[#267fc3]">Digital Opportunities</span>
-                  <span className="absolute bottom-2 left-0 w-full h-3 bg-[#ffc82e]/40 -z-0" />
+                  <span className="text-4xl sm:text-3xl lg:text-4xl xl:text-5xl relative z-10 text-[#ffc82e]">Digital Opportunities</span>
+                  <span className="absolute bottom-2 left-0 w-full h-3 bg-[#ffc82e]/30 -z-0" />
                 </span>
               </h1>
 
-              <p className="text-md sm:text-lg text-gray-600 max-w-lg leading-relaxed">
+              <p className="text-md sm:text-lg text-white/80 max-w-lg leading-relaxed">
                 Our work ensures that children, youth and women from Uganda's last mile rural areas have access to digital skills and tools to support them access opportunities for employment and entrepreneurship.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/courses">
-                  <button className="btn-primary group">
+                  <button className="bg-white text-[#267fc3] px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 hover:-translate-y-1 inline-flex items-center gap-2 shadow-lg">
                     Explore Programs
                     <ArrowRightIcon />
                   </button>
@@ -295,9 +295,9 @@ export default function Home() {
             {/* Right Content - Image */}
             <div className="relative">
               <div className="relative z-10">
-                <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-[#267fc3]/20">
+                <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-black/20">
                   <Image
-                    src="/students.jpg"
+                    src="/hero-image.svg"
                     alt="Students learning digital skills"
                     width={600}
                     height={500}
@@ -305,18 +305,18 @@ export default function Home() {
                     priority
                   />
                   {/* Overlay gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#267fc3]/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1a5a8a]/30 to-transparent" />
                 </div>
 
                 {/* Floating badge */}
-                <div className="absolute -top-4 -right-4 bg-[#267fc3] text-white rounded-2xl px-4 py-2 shadow-lg animate-float" style={{ animationDelay: '0.5s' }}>
+                <div className="absolute -top-4 -right-4 bg-[#ffc82e] text-gray-900 rounded-2xl px-4 py-2 shadow-lg animate-float" style={{ animationDelay: '0.5s' }}>
                   <p className="text-sm font-semibold">100% Free</p>
                 </div>
               </div>
 
               {/* Background decorative elements */}
-              <div className="absolute top-10 -right-10 w-40 h-40 bg-[#ffc82e]/20 rounded-full blur-2xl" />
-              <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-[#267fc3]/10 rounded-full blur-2xl" />
+              <div className="absolute top-10 -right-10 w-40 h-40 bg-[#ffc82e]/15 rounded-full blur-2xl" />
+              <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-white/5 rounded-full blur-2xl" />
             </div>
           </div>
         </div>
@@ -405,7 +405,7 @@ export default function Home() {
                 <div className="bg-gradient-to-br from-[#267fc3] to-[#1a5a8a] rounded-3xl p-8 lg:p-12 text-white">
                   <h3 className="text-2xl lg:text-3xl font-bold mb-6">Our Mission</h3>
                   <p className="text-white/90 text-lg leading-relaxed mb-8">
-                    To empower rural youth with digital skills that unlock opportunities for employment, entrepreneurship, and community development in the global digital economy.
+                    To empower rural communities to access digital opportunities for employment, entrepreneurship, and community development in the global digital economy.
                   </p>
                   <div className="grid grid-cols-2 gap-6">
                     <div className="bg-white/10 rounded-xl p-4">
@@ -719,7 +719,7 @@ export default function Home() {
               </div>
               <div className="p-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Digital Financial Literacy
+                  Digital Financial Inclusion
                 </h3>
                 <p className="text-gray-600 leading-relaxed mb-6">
                   We build and deploy digital tools to support youth and women entreprenuers leverage technology to improve efficiency, access financing and scale their businesses to support informal unbankable businesses access financial services.

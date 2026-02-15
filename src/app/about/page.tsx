@@ -135,7 +135,7 @@ export default function About() {
             </h1>
 
             <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              Empowering rural youth with digital skills to compete in the global digital economy, one student at a time.
+              Empowering rural communities to compete in the global digital economy, one intervetion at a time.
             </p>
           </div>
         </div>
@@ -277,18 +277,18 @@ export default function About() {
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               <div className="space-y-6">
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#ffc82e]/20 rounded-full">
-                  <span className="text-sm font-semibold text-gray-700">Holiday Program</span>
+                  <span className="text-sm font-semibold text-gray-700">Early Skilling</span>
                 </div>
                 <h3 className="text-3xl sm:text-4xl font-bold text-gray-900">
                   The Ignite Program
                 </h3>
                 <p className="text-lg text-gray-600 leading-relaxed">
-                  Provides holiday makers - the next generation of digital changemakers - with digital literacy. During school breaks, young learners engage in fun, interactive sessions that build foundational digital skills, coding basics, and creative problem-solving abilities.
+                   We deploy mobile labs to skill school children - the next generation of digital changemakers - with digital literacy. Young learners engage in fun, interactive sessions that build foundational digital skills.
                 </p>
-                <div className="flex flex-wrap gap-3">
-                  <span className="px-4 py-2 bg-[#ffc82e]/20 text-gray-700 rounded-full text-sm font-medium">Digital Literacy</span>
-                  <span className="px-4 py-2 bg-[#ffc82e]/20 text-gray-700 rounded-full text-sm font-medium">Coding Basics</span>
-                  <span className="px-4 py-2 bg-[#ffc82e]/20 text-gray-700 rounded-full text-sm font-medium">Creative Tech</span>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-3 py-1.5 bg-[#ffc82e]/20 text-gray-700 rounded-full text-xs font-medium">Digital Literacy</span>
+                  <span className="px-3 py-1.5 bg-[#ffc82e]/20 text-gray-700 rounded-full text-xs font-medium">Mobile Labs</span>
+                  <span className="px-3 py-1.5 bg-[#ffc82e]/20 text-gray-700 rounded-full text-xs font-medium">School Partnerships</span>
                 </div>
               </div>
               <div className="relative">

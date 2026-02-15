@@ -465,3 +465,83 @@ body {
     padding: 0 16px;
   }
 }
+
+/* ===== PWA & Mobile App Optimizations ===== */
+
+/* Safe area insets for notched devices (iPhone X+, etc.) */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Standalone PWA mode: use full screen with safe areas */
+@media all and (display-mode: standalone) {
+  body {
+    /* Prevent overscroll/bounce on iOS */
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Offset navbar for status bar in standalone mode */
+  .pwa-safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  /* Bottom navigation/actions safe area */
+  .pwa-safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Prevent pull-to-refresh on Android in standalone PWA */
+html {
+  overscroll-behavior-y: contain;
+}
+
+/* Disable long-press context menu on mobile for app-like feel */
+body {
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Allow text selection on content areas */
+p, span, h1, h2, h3, h4, h5, h6, li, td, th, label, a {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Disable text selection on buttons/nav for app feel */
+button, nav, [role="button"] {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Smooth momentum scrolling for all scrollable areas */
+.overflow-x-auto,
+.overflow-y-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Install prompt slide-up animation */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Loading spinner border width override */
+.border-3 {
+  border-width: 3px;
+}
